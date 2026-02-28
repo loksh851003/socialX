@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="story-wrapper">
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progress"></div>
+    </div>
+
+    <img id="storyImage" class="story-img">
+
+    {% if stories and stories[0].user == current_user %}
+    <form id="deleteForm" method="POST">
+        <button type="submit" class="delete-story-btn">Delete Story</button>
+    </form>
+    {% endif %}
+
+</div>
+
+<script>
+let stories = [
+{% for story in stories %}
+{
+    url: "{{ url_for('static', filename='uploads/' + story.image_file) }}",
+    deleteUrl: "{{ url_for('delete_story', story_id=story.id) }}"
+},
+{% endfor %}
+];
+
+let index = 0;
+let img = document.getElementById("storyImage");
+let progress = document.getElementById("progress");
+let deleteForm = document.getElementById("deleteForm");
+
+function showStory() {
+
+    if (index >= stories.length) {
+        window.location.href = "/";
+        return;
+    }
+
+    img.src = stories[index].url;
+
+    if (deleteForm) {
+        deleteForm.action = stories[index].deleteUrl;
+    }
+
+    progress.style.width = "0%";
+
+    let width = 0;
+
+    let interval = setInterval(() => {
+        width += 2;
+        progress.style.width = width + "%";
+
+        if (width >= 100) {
+            clearInterval(interval);
+            index++;
+            showStory();
+        }
+    }, 100);
+}
+
+showStory();
+</script>
+
+{% endblock %}

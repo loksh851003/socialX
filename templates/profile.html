@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.profile-card{
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,.06);
+margin-bottom:30px
+}
+.profile-top{
+display:flex;
+align-items:center;
+gap:30px;
+flex-wrap:wrap
+}
+.profile-pic{
+width:140px;
+height:140px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid #4f46e5
+}
+.profile-info h2{
+margin:0 0 8px 0
+}
+.profile-stats{
+display:flex;
+gap:25px;
+margin:15px 0
+}
+.stat{
+font-weight:600
+}
+.bio{
+color:#555;
+margin-top:10px
+}
+.action-buttons{
+margin-top:15px;
+display:flex;
+gap:10px;
+flex-wrap:wrap
+}
+.posts-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+gap:20px
+}
+.post-card{
+background:white;
+padding:15px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,.05)
+}
+.post-img{
+width:100%;
+border-radius:10px;
+margin-top:10px
+}
+@media(max-width:600px){
+.profile-top{
+flex-direction:column;
+align-items:center;
+text-align:center
+}
+}
+</style>
+
+<div class="profile-card">
+
+<div class="profile-top">
+
+{% if user.image_file %}
+<img src="{{ url_for('static', filename='uploads/' + user.image_file) }}" class="profile-pic">
+{% else %}
+<img src="{{ url_for('static', filename='default.png') }}" class="profile-pic">
+{% endif %}
+
+<div class="profile-info">
+<h2>{{ user.username if user.nickname else user.username }}</h2>
+
+<div class="profile-stats">
+<div class="stat">
+<a href="#posts-section">{{ user.posts|length }} Posts</a>
+</div>
+
+<div class="stat">
+<a href="{{ url_for('followers_list', username=user.username) }}">
+{{ user.followers.count() }} Followers
+</a>
+</div>
+
+<div class="stat">
+<a href="{{ url_for('following_list', username=user.username) }}">
+{{ user.followed.count() }} Following
+</a>
+</div>
+</div>
+
+<p class="bio">{{ user.bio }}</p>
+
+<div class="action-buttons">
+
+{% if user == current_user %}
+<a href="{{ url_for('edit_profile') }}">
+<button>Edit Profile</button>
+</a>
+{% else %}
+
+<a href="{{ url_for('chat', username=user.username) }}">
+<button>Message</button>
+</a>
+
+{% if current_user.is_following(user) %}
+<a href="{{ url_for('unfollow', username=user.username) }}">
+<button>Unfollow</button>
+</a>
+{% else %}
+<a href="{{ url_for('follow', username=user.username) }}">
+<button>Follow</button>
+</a>
+{% endif %}
+
+{% endif %}
+
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="posts-grid">
+{% for post in posts %}
+<div class="post-card">
+<p>{{ post.content }}</p>
+
+{% if post.image_file %}
+<img src="{{ url_for('static', filename='uploads/' + post.image_file) }}" class="post-img">
+{% endif %}
+
+<p>❤️ {{ post.likers|length }} | 💬 {{ post.comments|length }}</p>
+
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

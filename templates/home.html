@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="story-bar">
+
+<a href="{{ url_for('add_story') }}" class="story-circle">+</a>
+
+{% for story in stories %}
+<a href="{{ url_for('view_story', username=story.user.username) }}" class="story-circle">
+{{ story.user.username }}
+</a>
+{% endfor %}
+
+</div>
+
+<div class="feed">
+{% for post in posts %}
+<div class="card">
+
+<div class="card-header">
+<strong>{{ post.author.username }}</strong>
+</div>
+
+<div class="card-body">
+<p>{{ post.content }}</p>
+
+{% if post.image_file %}
+<img src="{{ url_for('static', filename='uploads/' + post.image_file) }}" class="post-img">
+{% endif %}
+</div>
+
+<div class="card-actions">
+<a href="{{ url_for('like_post', post_id=post.id) }}">❤️ {{ post.likers|length }}</a>
+
+{% if post.author == current_user %}
+<form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}">
+<button type="submit" class="delete-btn">🗑</button>
+</form>
+{% endif %}
+</div>
+
+<div class="comments">
+{% for comment in post.comments %}
+<p><b>{{ comment.author.username }}</b> {{ comment.content }}</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('comment_post', post_id=post.id) }}">
+<input type="text" name="content" placeholder="Add comment..." required>
+</form>
+</div>
+
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

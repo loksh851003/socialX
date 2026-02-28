@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="list-box">
+<h2>{{ user.nickname if user.nickname else user.username }}'s Followers</h2>
+
+{% for follower in followers %}
+<div class="list-user">
+<a href="{{ url_for('profile', username=follower.username) }}">
+{{ follower.username }}
+</a>
+</div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

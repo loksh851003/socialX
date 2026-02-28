@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Edit Profile</h2>
+
+<form method="POST" enctype="multipart/form-data">
+<input type="text" name="username" value="{{ user.username }}" required>
+<input type="text" name="nickname"
+value="{{ user.nickname }}"
+placeholder="Nickname (display name)">
+<input type="email" name="email" value="{{ user.email }}" required>
+<textarea name="bio">{{ user.bio }}</textarea>
+<input type="file" name="image">
+<label>
+<input type="checkbox" name="is_private" {% if user.is_private %}checked{% endif %}>
+Private Account
+</label>
+<button type="submit">Save Changes</button>
+</form>
+
+{% endblock %}

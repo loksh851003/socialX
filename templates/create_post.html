@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.post-form{
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,.06);
+max-width:600px;
+margin:auto
+}
+.post-form h2{
+margin-bottom:20px
+}
+.post-form textarea{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ddd;
+margin-bottom:15px;
+resize:none
+}
+.post-form input[type="file"]{
+margin-bottom:15px
+}
+.post-form button{
+width:100%
+}
+</style>
+
+<div class="post-form">
+<h2>Create Post</h2>
+
+<form method="POST" enctype="multipart/form-data">
+<textarea name="content" rows="4" placeholder="What's on your mind?" required></textarea>
+<input type="file" name="image">
+<button type="submit">Upload Post</button>
+</form>
+
+</div>
+
+{% endblock %}

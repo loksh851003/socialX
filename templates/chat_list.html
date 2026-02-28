@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.chat-container{
+background:white;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,.06);
+overflow:hidden
+}
+.chat-item{
+display:flex;
+align-items:center;
+padding:15px 20px;
+border-bottom:1px solid #eee;
+cursor:pointer;
+transition:.2s
+}
+.chat-item:hover{
+background:#f5f7fb
+}
+.chat-pic{
+width:50px;
+height:50px;
+border-radius:50%;
+object-fit:cover;
+margin-right:15px
+}
+.chat-info{
+flex:1
+}
+.chat-name{
+font-weight:600
+}
+.chat-preview{
+font-size:14px;
+color:#777;
+margin-top:3px
+}
+.chat-meta{
+text-align:right
+}
+.chat-time{
+font-size:12px;
+color:#999
+}
+.unread-badge{
+background:#25d366;
+color:white;
+font-size:12px;
+padding:4px 8px;
+border-radius:20px;
+margin-top:5px;
+display:inline-block
+}
+.no-chats{
+padding:30px;
+text-align:center;
+color:#777
+}
+</style>
+
+<div class="chat-container">
+
+{% if chat_data %}
+{% for chat in chat_data %}
+<a href="{{ url_for('chat', username=chat.user.username) }}">
+<div class="chat-item">
+
+{% if chat.user.image_file %}
+<img src="{{ url_for('static', filename='uploads/' + chat.user.image_file) }}" class="chat-pic">
+{% else %}
+<img src="{{ url_for('static', filename='default.png') }}" class="chat-pic">
+{% endif %}
+
+<div class="chat-info">
+<div class="chat-name">{{ chat.user.username }}</div>
+
+{% if chat.last_message %}
+<div class="chat-preview">
+{{ chat.last_message.content[:30] }}{% if chat.last_message.content|length > 30 %}...{% endif %}
+</div>
+{% else %}
+<div class="chat-preview">No messages yet</div>
+{% endif %}
+</div>
+
+<div class="chat-meta">
+{% if chat.last_message %}
+<div class="chat-time">
+{{ chat.last_message.timestamp.strftime("%H:%M") }}
+</div>
+{% endif %}
+
+{% if chat.unread_count > 0 %}
+<div class="unread-badge">
+{{ chat.unread_count }}
+</div>
+{% endif %}
+</div>
+
+</div>
+</a>
+{% endfor %}
+{% else %}
+<div class="no-chats">No conversations yet</div>
+{% endif %}
+
+</div>
+
+{% endblock %}

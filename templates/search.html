@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.search-box{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,.06);
+margin-bottom:30px
+}
+.search-box form{
+display:flex;
+gap:10px
+}
+.search-box input{
+flex:1;
+padding:12px;
+border-radius:10px;
+border:1px solid #ddd
+}
+.search-box button{
+padding:12px 20px
+}
+.results{
+display:grid;
+gap:15px
+}
+.user-card{
+background:white;
+padding:15px 20px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+.user-info{
+display:flex;
+align-items:center;
+gap:15px
+}
+.user-pic{
+width:45px;
+height:45px;
+border-radius:50%;
+object-fit:cover
+}
+.no-result{
+text-align:center;
+color:#777
+}
+</style>
+
+<div class="search-box">
+<form method="GET" action="{{ url_for('search') }}">
+<input type="text" name="q" placeholder="Search users..." value="{{ query or '' }}" required>
+<button type="submit">Search</button>
+</form>
+</div>
+
+<div class="results">
+{% if users %}
+{% for user in users %}
+<div class="user-card">
+<div class="user-info">
+{% if user.image_file %}
+<img src="{{ url_for('static', filename='uploads/' + user.image_file) }}" class="user-pic">
+{% else %}
+<img src="{{ url_for('static', filename='default.png') }}" class="user-pic">
+{% endif %}
+<div>
+<strong>{{ user.username if user.username else user.username }}</strong>
+</div>
+</div>
+<a href="{{ url_for('profile', username=user.username) }}">
+<button>View</button>
+</a>
+</div>
+{% endfor %}
+{% else %}
+{% if query %}
+<p class="no-result">No users found</p>
+{% endif %}
+{% endif %}
+</div>
+
+{% endblock %}

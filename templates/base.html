@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SocialX</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+body{
+background:#f4f6fb;
+font-family:'Poppins',sans-serif;
+margin:0
+}
+
+.navbar{
+background:white;
+height:60px;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 4px 20px rgba(0,0,0,.05);
+position:sticky;
+top:0;
+z-index:1000
+}
+
+.nav-inner{
+width:90%;
+max-width:1100px;
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+
+.logo{
+font-weight:700;
+font-size:20px;
+color:#4f46e5;
+white-space:nowrap
+}
+
+.nav-links{
+display:flex;
+gap:18px;
+align-items:center
+}
+
+.nav-links a{
+font-size:14px;
+font-weight:500;
+color:#444;
+padding:6px 10px;
+border-radius:6px;
+transition:.2s
+}
+
+.nav-links a:hover{
+background:#eef2ff;
+color:#4f46e5
+}
+
+.container{
+width:90%;
+max-width:900px;
+margin:30px auto
+}
+
+@media(max-width:768px){
+.nav-links{
+gap:10px;
+font-size:13px
+}
+}
+</style>
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+var socket = io();
+
+socket.on("new_notification", function(data) {
+    alert(data.message);
+});
+</script>
+
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="nav-inner">
+
+<div class="logo">SocialX</div>
+
+<div class="nav-links">
+<a href="{{ url_for('home') }}">Home</a>
+<a href="{{ url_for('create_post') }}">Create</a>
+<a href="{{ url_for('chat_list') }}">Chats</a>
+<a href="{{ url_for('search') }}">Search</a>
+<a href="{{ url_for('notifications') }}">Notifications</a>
+<a href="{{ url_for('profile', username=current_user.username) }}">Profile</a>
+<a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+</div>
+</div>
+
+<div class="container">
+{% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
